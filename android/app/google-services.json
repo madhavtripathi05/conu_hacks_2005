@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1066210387407",
+    "project_id": "order-wise",
+    "storage_bucket": "order-wise.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066210387407:android:bce557da83da0d36e91eba",
+        "android_client_info": {
+          "package_name": "com.example.conu_hacks_2005"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066210387407-s5ptdao8ara7ak27dh8s9rsjlj7m6usk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgflT8IqRm1CRdCnBBMd-DGtLal7ZnYIc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1066210387407-s5ptdao8ara7ak27dh8s9rsjlj7m6usk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
