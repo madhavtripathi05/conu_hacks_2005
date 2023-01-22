@@ -1,3 +1,4 @@
+import 'package:conu_hacks_2005/services/api_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -6,18 +7,26 @@ class AuthService {
   static AuthService? _instance;
 
   static AuthService get instance => _instance ??= AuthService._();
-
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
-  );
-
-  Future<void> handleSignIn() async {
+  var googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _user;
+  GoogleSignInAccount get user => _user!;
+  Future handleSignIn() async {
     try {
-      final acc = await _googleSignIn.signIn();
-    } catch (error) {
-      print(error);
+      final googleuser = await googleSignIn.signIn().catchError((onError) => print(onError));
+      if (googleuser == null) {
+        return;
+      }
+      _user = googleuser;
+      final googleAuth = await googleuser.authentication;
+      final credential =
+          GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+      await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
+        ApiService.instance.sendUserDetails(FirebaseAuth.instance.currentUser);
+      }).catchError((e) {
+        print(e);
+      });
+    } catch (e) {
+      print(e);
     }
   }
-
-  Stream<User?> currentUser = FirebaseAuth.instance.userChanges();
 }
