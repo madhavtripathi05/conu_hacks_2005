@@ -1,3 +1,4 @@
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../models/group.dart';
@@ -18,5 +19,13 @@ class GroupController {
 
   Future<void> createGroup({required String name}) async {
     await api.addGroup(name);
+    await fetchGroups();
+  }
+
+  Future<String> scanQR() async => await FlutterBarcodeScanner.scanBarcode("#0000ee", "Cancel", true, ScanMode.QR);
+
+  Future<void> joinGroup() async {
+    await api.joinGroup(await scanQR());
+    await fetchGroups();
   }
 }

@@ -1,5 +1,8 @@
+import 'package:conu_hacks_2005/controllers/group_controller.dart';
 import 'package:conu_hacks_2005/controllers/orders_controller.dart';
 import 'package:flutter/material.dart';
+
+import '../models/group.dart';
 
 class AddPage extends StatefulWidget {
   const AddPage({super.key});
@@ -8,7 +11,7 @@ class AddPage extends StatefulWidget {
   State<AddPage> createState() => _AddPageState();
 }
 
-final qItems = ['Count', 'KG', 'grams', 'litre', 'ml'];
+final qItems = ['item', 'KG', 'grams', 'litre', 'ml'];
 
 class _AddPageState extends State<AddPage> {
   @override
@@ -17,6 +20,7 @@ class _AddPageState extends State<AddPage> {
       super.setState(fn);
     }
   }
+
   final formKey = GlobalKey<FormState>();
   String selectedQuantity = qItems[0];
   final storeNameController = TextEditingController();
@@ -25,6 +29,7 @@ class _AddPageState extends State<AddPage> {
   final addressController = TextEditingController();
   String address = '';
   final orderController = OrderController.instance;
+  Group? selectedGroup = GroupController.instance.groupsSubject.value?.first;
 
   @override
   Widget build(BuildContext context) {
@@ -113,6 +118,44 @@ class _AddPageState extends State<AddPage> {
             ),
             const SizedBox(height: 20),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text('Group'),
+                  ],
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: DropdownButtonHideUnderline(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        DropdownButton<Group>(
+                          value: selectedGroup,
+                          items: (GroupController.instance.groupsSubject.value ?? []).map((value) {
+                            return DropdownMenuItem<Group>(
+                              value: value,
+                              child: Text(value.groupName),
+                            );
+                          }).toList(),
+                          onChanged: (s) {
+                            selectedGroup = s;
+
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
               children: const [
                 Text('Address'),
                 Text(' (optional)', style: TextStyle(color: Colors.grey, fontSize: 10)),
@@ -133,7 +176,8 @@ class _AddPageState extends State<AddPage> {
       await orderController.addOrder(
           address: addressController.text,
           storeName: storeNameController.text,
-          list: itemNameController.text + quantityController.text,
+          list: "${itemNameController.text}: ${quantityController.text} $selectedQuantity",
+          groupId: selectedGroup?.groupId ?? '',
           createdAt: DateTime.now().toString());
     } else {
       // show error

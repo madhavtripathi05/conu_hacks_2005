@@ -21,9 +21,9 @@ class AuthService {
       final credential =
           GoogleAuthProvider.credential(accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
-        ApiService.instance.sendUserDetails(FirebaseAuth.instance.currentUser);
+        await ApiService.instance.sendUserDetails();
       }).catchError((e) {
-        print(e);
+        print("error $e");
       });
     } catch (e) {
       print(e);

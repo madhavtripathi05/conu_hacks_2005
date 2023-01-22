@@ -1,60 +1,73 @@
 // To parse this JSON data, do
 //
-//     final order = orderFromJson(jsonString);
+//     final request = requestFromJson(jsonString);
 
 import 'dart:convert';
 
-Order orderFromJson(String str) => Order.fromJson(json.decode(str));
+Request requestFromJson(String str) => Request.fromJson(json.decode(str));
 
-String orderToJson(Order data) => json.encode(data.toJson());
+String requestToJson(Request data) => json.encode(data.toJson());
 
-class Order {
-  Order({
+class Request {
+  Request({
+    required this.item,
+    required this.userName,
+  });
+
+  Item item;
+  String userName;
+
+  factory Request.fromJson(Map<String, dynamic> json) => Request(
+        item: Item.fromJson(json["item"]),
+        userName: json["userName"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "item": item.toJson(),
+        "userName": userName,
+      };
+}
+
+class Item {
+  Item({
     required this.isComplete,
-    required this.id,
     required this.orderId,
     required this.userId,
+    required this.groupId,
     required this.storeName,
     required this.address,
     required this.list,
     required this.createdAt,
-    required this.v,
-    required this.boughtBy,
   });
 
   bool isComplete;
-  String id;
   String orderId;
   String userId;
+  String groupId;
   String storeName;
   String address;
   String list;
-  String? boughtBy;
   DateTime createdAt;
-  int v;
 
-  factory Order.fromJson(Map<String, dynamic> json) => Order(
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
         isComplete: json["isComplete"],
-        id: json["_id"],
         orderId: json["orderId"],
         userId: json["userId"],
+        groupId: json["groupId"],
         storeName: json["storeName"],
         address: json["address"],
         list: json["list"],
-        boughtBy: json["boughtBy"],
         createdAt: DateTime.parse(json["createdAt"]),
-        v: json["__v"],
       );
 
   Map<String, dynamic> toJson() => {
         "isComplete": isComplete,
-        "_id": id,
         "orderId": orderId,
         "userId": userId,
+        "groupId": groupId,
         "storeName": storeName,
         "address": address,
         "list": list,
         "createdAt": createdAt.toIso8601String(),
-        "__v": v,
       };
 }

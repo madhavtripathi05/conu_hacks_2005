@@ -3,6 +3,7 @@ import 'package:conu_hacks_2005/pages/orders.dart';
 import 'package:conu_hacks_2005/pages/profile.dart';
 import 'package:conu_hacks_2005/pages/requests.dart';
 import 'package:conu_hacks_2005/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'groups.dart';
@@ -27,34 +28,57 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: buildPage(currIndex),
-      floatingActionButton: FloatingActionButton(
-        onPressed: performAdd,
-        child: const Icon(Icons.add),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: true,
-          showUnselectedLabels: true,
-          onTap: (i) => setState(() {
-                if (i == 2) {
-                  performAdd();
-                  return;
-                }
-                currIndex = i;
-                setState(() {});
-              }),
-          currentIndex: currIndex,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: 'Orders'),
-            BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Groups'),
-            BottomNavigationBarItem(icon: Icon(Icons.abc, color: Colors.transparent), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Requests'),
-            BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'profile'),
-          ]),
-    );
+    return StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.userChanges(),
+        builder: (context, snapshot) {
+          final user = snapshot.data;
+
+          if (user != null) {
+            return Scaffold(
+              body: buildPage(currIndex),
+              floatingActionButton: FloatingActionButton(
+                onPressed: performAdd,
+                child: const Icon(Icons.add),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+              bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  showSelectedLabels: true,
+                  showUnselectedLabels: true,
+                  onTap: (i) => setState(() {
+                        if (i == 2) {
+                          performAdd();
+                          return;
+                        }
+                        currIndex = i;
+                        setState(() {});
+                      }),
+                  currentIndex: currIndex,
+                  items: const [
+                    BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: 'My Cart'),
+                    BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Groups'),
+                    BottomNavigationBarItem(icon: Icon(Icons.abc, color: Colors.transparent), label: ''),
+                    BottomNavigationBarItem(icon: Icon(Icons.list), label: 'Requests'),
+                    BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Profile'),
+                  ]),
+            );
+          }
+          return Material(
+            child: Center(
+              child: MaterialButton(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text('Sign in with google'),
+                  ],
+                ),
+                onPressed: () {
+                  AuthService.instance.handleSignIn();
+                },
+              ),
+            ),
+          );
+        });
   }
 
   Route _createRoute() {
@@ -82,7 +106,7 @@ class _HomeState extends State<Home> {
         widget = const Orders();
         break;
       case 1:
-        widget = Groups();
+        widget = const Groups();
         break;
       case 3:
         widget = const Requests();

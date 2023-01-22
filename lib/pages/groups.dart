@@ -83,7 +83,16 @@ class _GroupsState extends State<Groups> {
                       });
                     });
               },
-              icon: const Icon(Icons.add, color: Colors.black))
+              icon: const Icon(Icons.add, color: Colors.black)),
+          IconButton(
+              onPressed: groupController.joinGroup,
+              icon: const Icon(
+                Icons.qr_code,
+                color: Colors.black,
+              )),
+          const SizedBox(
+            width: 20,
+          )
         ],
       ),
       body: Padding(
@@ -97,6 +106,11 @@ class _GroupsState extends State<Groups> {
                 );
               }
               final groups = snapshot.data ?? [];
+              if (groups.isEmpty) {
+                return const Center(
+                  child: Text('You haven\'t created or joined group'),
+                );
+              }
               return ListView.builder(
                   itemCount: groups.length,
                   itemBuilder: (context, i) {
@@ -109,10 +123,18 @@ class _GroupsState extends State<Groups> {
                               return StatefulBuilder(builder: (context, ss) {
                                 return AlertDialog(
                                     title: const Text("Scan QR to join this group"),
-                                    content: QrImage(
-                                      data: group.groupId,
-                                      version: QrVersions.auto,
-                                      // size: 200.0,
+                                    content: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        SizedBox(
+                                          height: 200,
+                                          width: 200,
+                                          child: QrImage(
+                                            data: group.groupId,
+                                            version: QrVersions.auto,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     actions: [
                                       MaterialButton(

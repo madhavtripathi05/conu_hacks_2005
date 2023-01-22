@@ -1,5 +1,5 @@
 import 'package:conu_hacks_2005/controllers/orders_controller.dart';
-import 'package:conu_hacks_2005/request_card.dart';
+import 'package:conu_hacks_2005/order_card.dart';
 import 'package:flutter/material.dart';
 
 import '../models/order.dart';
@@ -38,7 +38,7 @@ class _OrdersState extends State<Orders> {
         elevation: 0,
         backgroundColor: Colors.white,
         title: const Text(
-          'Orders',
+          'My Cart',
           style: TextStyle(color: Colors.black),
         ),
       ),
@@ -53,17 +53,26 @@ class _OrdersState extends State<Orders> {
                 );
               }
               final orders = snapshot.data ?? [];
-              return ListView.builder(
-                  itemCount: orders.length,
-                  itemBuilder: (context, i) {
-                    final order = orders[i];
+              if (orders.isEmpty) {
+                return const Center(
+                  child: Text('No orders found'),
+                );
+              }
+              return RefreshIndicator(
+                onRefresh: orderController.fetchOrders,
+                child: ListView.builder(
+                    itemCount: orders.length,
+                    itemBuilder: (context, i) {
+                      final order = orders[i];
 
-                    return RequestCard(
-                        imageUrl: "https://ui-avatars.com/api/?format=png&name=${order.storeName}&rounded=true",
-                        items: order.list,
-                        title: order.storeName,
-                        status: order.isComplete ? RequestStatus.complete : RequestStatus.pending);
-                  });
+                      return OrderCard(
+                          imageUrl: "https://ui-avatars.com/api/?format=png&name=${order.storeName}&rounded=true",
+                          items: order.list,
+                          boughtBy: order.boughtBy,
+                          title: order.storeName,
+                          status: order.isComplete ? RequestStatus.complete : RequestStatus.pending);
+                    }),
+              );
             }),
       ),
     );
