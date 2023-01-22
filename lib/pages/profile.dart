@@ -9,6 +9,10 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircleAvatar(backgroundImage: AssetImage("assets/images/logo.jpeg")),
+        ),
         elevation: 0,
         backgroundColor: Colors.white,
         title: const Text(

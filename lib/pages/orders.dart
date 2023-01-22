@@ -35,6 +35,10 @@ class _OrdersState extends State<Orders> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircleAvatar(backgroundImage: AssetImage("assets/images/logo.jpeg")),
+        ),
         elevation: 0,
         backgroundColor: Colors.white,
         title: const Text(
@@ -68,6 +72,9 @@ class _OrdersState extends State<Orders> {
                       return OrderCard(
                           imageUrl: "https://ui-avatars.com/api/?format=png&name=${order.storeName}&rounded=true",
                           items: order.list,
+                          onDelete: () {
+                            orderController.deleteOrder(order.orderId);
+                          },
                           boughtBy: order.boughtBy,
                           title: order.storeName,
                           status: order.isComplete ? RequestStatus.complete : RequestStatus.pending);

@@ -2,7 +2,7 @@
     package="com.example.conu_hacks_2005">
    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="conu_hacks_2005"
+        android:label="OrderWise"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -25,7 +25,12 @@ class OrderController {
 
   Future<void> markRequestComplete(String orderId) async {
     await api.markRequestComplete(orderId: orderId);
-    fetchRequests();
+    await fetchRequests();
+  }
+
+  Future<void> deleteOrder(String orderId) async {
+    await api.deleteOrder(orderId: orderId);
+    await fetchOrders();
   }
 
   Future<void> addOrder({

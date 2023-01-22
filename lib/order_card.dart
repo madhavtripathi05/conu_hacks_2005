@@ -2,20 +2,28 @@ import 'package:flutter/material.dart';
 
 enum RequestStatus { pending, complete }
 
-class OrderCard extends StatelessWidget {
+class OrderCard extends StatefulWidget {
   const OrderCard(
       {super.key,
       required this.imageUrl,
       required this.items,
       required this.title,
       required this.status,
-      required this.boughtBy});
+      required this.boughtBy,
+      required this.onDelete});
   final String imageUrl;
   final String title;
   final String items;
   final String? boughtBy;
   final RequestStatus status;
+  final Function() onDelete;
 
+  @override
+  State<OrderCard> createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<OrderCard> {
+  bool showLoader = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -23,10 +31,22 @@ class OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
-        leading: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.network(imageUrl)),
-        title: Text(title),
+        // leading: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.network(imageUrl)),
+        leading: showLoader
+            ? const SizedBox(height: 20, width: 20, child: Center(child: CircularProgressIndicator()))
+            : IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                  color: Colors.red,
+                ),
+                onPressed: () {
+                  showLoader = true;
+                  setState(() {});
+                  widget.onDelete();
+                }),
+        title: Text(widget.title),
         subtitle: Text(
-          items,
+          widget.items,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -39,13 +59,13 @@ class OrderCard extends StatelessWidget {
                 Container(
                   height: 12,
                   width: 12,
-                  decoration: BoxDecoration(shape: BoxShape.circle, color: getColorFromStatus(status)),
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: getColorFromStatus(widget.status)),
                   margin: const EdgeInsets.only(right: 4),
                 ),
-                Text(status == RequestStatus.complete ? "Completed by" : "Pending")
+                Text(widget.status == RequestStatus.complete ? "Completed by" : "Pending")
               ],
             ),
-            Text(boughtBy ?? '')
+            Text(widget.boughtBy ?? '')
           ],
         ),
       ),

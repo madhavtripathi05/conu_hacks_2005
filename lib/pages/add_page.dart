@@ -21,6 +21,18 @@ class _AddPageState extends State<AddPage> {
     }
   }
 
+  void init() async {
+    await GroupController.instance.fetchGroups();
+    selectedGroup = GroupController.instance.groupsSubject.value?.first;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    init();
+    super.initState();
+  }
+
   final formKey = GlobalKey<FormState>();
   String selectedQuantity = qItems[0];
   final storeNameController = TextEditingController();

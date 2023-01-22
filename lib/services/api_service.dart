@@ -46,6 +46,18 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> deleteOrder({required String orderId}) async {
+    try {
+      print(orderId);
+      var uid = FirebaseAuth.instance.currentUser?.uid;
+      final response = await http.delete(Uri.parse("$_baseUrl/order/delete-order"),
+          headers: {"Authorization": "Bearer $uid"}, body: {"orderId": orderId});
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'message': 'Something went wrong'};
+    }
+  }
+
   Future<Map<String, dynamic>> markRequestComplete({required String orderId}) async {
     try {
       var uid = FirebaseAuth.instance.currentUser?.uid;

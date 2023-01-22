@@ -36,6 +36,10 @@ class _RequestsState extends State<Requests> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: CircleAvatar(backgroundImage: AssetImage("assets/images/logo.jpeg")),
+        ),
         backgroundColor: Colors.white,
         title: const Text(
           'Requests',
