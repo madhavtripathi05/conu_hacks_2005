@@ -27,6 +27,7 @@ class _GroupsState extends State<Groups> {
   final nameController = TextEditingController();
 
   bool enableButton = false;
+  bool showLoader = false;
 
   @override
   void initState() {
@@ -150,6 +151,7 @@ class _GroupsState extends State<Groups> {
                             });
                       },
                       child: Card(
+                        elevation: 5,
                         child: ListTile(
                           leading: Image.network(
                             "https://ui-avatars.com/api/?format=png&name=${group.groupName}&rounded=true",
@@ -161,6 +163,27 @@ class _GroupsState extends State<Groups> {
                             style: const TextStyle(fontSize: 20),
                           ),
                           subtitle: Text('${group.members} members'),
+                          trailing: StatefulBuilder(builder: (context, ss) {
+                            return showLoader
+                                ? const SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Center(
+                                        child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator())))
+                                : IconButton(
+                                    icon: const Icon(
+                                      Icons.exit_to_app,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () async {
+                                      showLoader = true;
+                                      setState(() {});
+                                      await groupController.leaveGroup(group.groupId);
+                                      showLoader = false;
+                                      setState(() {});
+                                    },
+                                  );
+                          }),
                         ),
                       ),
                     );

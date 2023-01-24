@@ -27,22 +27,28 @@ class _OrderCardState extends State<OrderCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 5,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
         // leading: ClipRRect(borderRadius: BorderRadius.circular(4), child: Image.network(imageUrl)),
         leading: showLoader
-            ? const SizedBox(height: 20, width: 20, child: Center(child: CircularProgressIndicator()))
+            ? const SizedBox(
+                height: 50,
+                width: 50,
+                child: Center(child: SizedBox(height: 20, width: 20, child: CircularProgressIndicator())))
             : IconButton(
                 icon: const Icon(
                   Icons.delete,
                   color: Colors.red,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   showLoader = true;
                   setState(() {});
-                  widget.onDelete();
+                  await widget.onDelete();
+                  showLoader = false;
+                  setState(() {});
                 }),
         title: Text(widget.title),
         subtitle: Text(

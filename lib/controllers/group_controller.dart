@@ -28,4 +28,9 @@ class GroupController {
     await api.joinGroup(await scanQR());
     await fetchGroups();
   }
+
+  Future<void> leaveGroup(String groupId) async {
+    await api.leaveGroup(groupId: groupId);
+    await fetchGroups();
+  }
 }

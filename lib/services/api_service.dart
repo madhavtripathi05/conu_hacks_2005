@@ -11,7 +11,7 @@ class ApiService {
   ApiService._();
   static ApiService? _instance;
   static ApiService get instance => _instance ??= ApiService._();
-  final _baseUrl = "https://red-results-ask-70-80-20-156.loca.lt";
+  final _baseUrl = "http://65.2.151.73:8080";
 
   Future<Map<String, dynamic>> sendUserDetails() async {
     var currentUser = FirebaseAuth.instance.currentUser;
@@ -52,6 +52,18 @@ class ApiService {
       var uid = FirebaseAuth.instance.currentUser?.uid;
       final response = await http.delete(Uri.parse("$_baseUrl/order/delete-order"),
           headers: {"Authorization": "Bearer $uid"}, body: {"orderId": orderId});
+      return jsonDecode(response.body);
+    } catch (e) {
+      return {'message': 'Something went wrong'};
+    }
+  }
+
+  Future<Map<String, dynamic>> leaveGroup({required String groupId}) async {
+    try {
+      print(groupId);
+      var uid = FirebaseAuth.instance.currentUser?.uid;
+      final response = await http.post(Uri.parse("$_baseUrl/group/leave-group"),
+          headers: {"Authorization": "Bearer $uid"}, body: {"groupId": groupId});
       return jsonDecode(response.body);
     } catch (e) {
       return {'message': 'Something went wrong'};

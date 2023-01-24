@@ -72,8 +72,8 @@ class _OrdersState extends State<Orders> {
                       return OrderCard(
                           imageUrl: "https://ui-avatars.com/api/?format=png&name=${order.storeName}&rounded=true",
                           items: order.list,
-                          onDelete: () {
-                            orderController.deleteOrder(order.orderId);
+                          onDelete: () async{
+                           await orderController.deleteOrder(order.orderId);
                           },
                           boughtBy: order.boughtBy,
                           title: order.storeName,

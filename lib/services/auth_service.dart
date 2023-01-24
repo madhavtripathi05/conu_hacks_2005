@@ -12,7 +12,10 @@ class AuthService {
   GoogleSignInAccount get user => _user!;
   Future handleSignIn() async {
     try {
-      final googleuser = await googleSignIn.signIn().catchError((onError) => print(onError));
+      final googleuser = await googleSignIn.signIn().catchError((onError) {
+        print(onError);
+        return null;
+      });
       if (googleuser == null) {
         return;
       }
@@ -23,10 +26,10 @@ class AuthService {
       await FirebaseAuth.instance.signInWithCredential(credential).then((value) async {
         await ApiService.instance.sendUserDetails();
       }).catchError((e) {
-        print("error $e");
+        print("auth error $e");
       });
     } catch (e) {
-      print(e);
+      print("goggle sign in error $e");
     }
   }
 }
